@@ -1,10 +1,10 @@
 
 const letterButton = document.getElementById("letterButton");
 const letter = document.getElementById("letter");
+const music = document.getElementById("music");
 
 if (letterButton && letter) {
-
-    letterButton.addEventListener("click", () => {
+    letterButton.addEventListener("click", async () => {
 
         letter.classList.toggle("hidden");
 
@@ -16,28 +16,26 @@ if (letterButton && letter) {
 
         letterButton.setAttribute("aria-expanded", isOpen);
 
-        if (isOpen) {
-            setTimeout(() => {
-                letter.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-            }, 100);
+        // Start music after her tap
+        if (music && music.paused) {
+            music.volume = 0.5;
+
+            try {
+                await music.play();
+            } catch (error) {
+                console.log("Music could not start:", error);
+            }
         }
 
+        if (isOpen) {
+            letter.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
     });
-
 }
-const music = document.getElementById("music");
 
-if (music) {
-    music.volume = 0.5;
-
-    music.play().catch(() => {
-        console.log("Waiting for user interaction to play music.");
-    });
-
-    document.addEventListener("click", () => {
         if (music.paused) {
             music.play().catch(() => {});
         }
