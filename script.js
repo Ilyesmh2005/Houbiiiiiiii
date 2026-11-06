@@ -3,30 +3,31 @@ const letterButton = document.getElementById("letterButton");
 const letter = document.getElementById("letter");
 const music = document.getElementById("music");
 
-letterButton.addEventListener("click", async () => {
-    const isOpening = letter.classList.contains("hidden");
+letterButton.addEventListener("click", function () {
+    const opening = letter.classList.contains("hidden");
 
-    letter.classList.toggle("hidden");
+    letter.classList.toggle("hidden", !opening);
 
-    letterButton.textContent = isOpening
+    letterButton.textContent = opening
         ? "Close your letter ♡"
         : "Open your little letter 💌";
 
-    letterButton.setAttribute("aria-expanded", isOpening);
+    letterButton.setAttribute("aria-expanded", opening);
 
-    // Start the song when she opens the letter
-    if (isOpening && music) {
+    if (opening) {
+        // Play music directly from the button click
         music.volume = 0.5;
 
-        try {
-            await music.play();
-            console.log("Our song is playing ❤️");
-        } catch (error) {
-            console.log("Music playback failed:", error);
-        }
-    }
+        if (music.paused) {
+            const playPromise = music.play();
 
-    if (isOpening) {
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Music error:", error);
+                });
+            }
+        }
+
         letter.scrollIntoView({
             behavior: "smooth",
             block: "center"
