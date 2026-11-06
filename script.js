@@ -3,41 +3,33 @@ const letterButton = document.getElementById("letterButton");
 const letter = document.getElementById("letter");
 const music = document.getElementById("music");
 
-if (letterButton && letter) {
-    letterButton.addEventListener("click", async () => {
+letterButton.addEventListener("click", async () => {
+    const isOpening = letter.classList.contains("hidden");
 
-        letter.classList.toggle("hidden");
+    letter.classList.toggle("hidden");
 
-        const isOpen = !letter.classList.contains("hidden");
+    letterButton.textContent = isOpening
+        ? "Close your letter ♡"
+        : "Open your little letter 💌";
 
-        letterButton.textContent = isOpen
-            ? "Close your letter ♡"
-            : "Open your little letter 💌";
+    letterButton.setAttribute("aria-expanded", isOpening);
 
-        letterButton.setAttribute("aria-expanded", isOpen);
+    // Start the song when she opens the letter
+    if (isOpening && music) {
+        music.volume = 0.5;
 
-        // Start music after her tap
-        if (music && music.paused) {
-            music.volume = 0.5;
-
-            try {
-                await music.play();
-            } catch (error) {
-                console.log("Music could not start:", error);
-            }
+        try {
+            await music.play();
+            console.log("Our song is playing ❤️");
+        } catch (error) {
+            console.log("Music playback failed:", error);
         }
+    }
 
-        if (isOpen) {
-            letter.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-        }
-    });
-}
-
-        if (music.paused) {
-            music.play().catch(() => {});
-        }
-    }, { once: true });
-}
+    if (isOpening) {
+        letter.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+});
