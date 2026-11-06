@@ -28,3 +28,18 @@ if (letterButton && letter) {
     });
 
 }
+const music = document.getElementById("music");
+
+if (music) {
+    music.volume = 0.5;
+
+    music.play().catch(() => {
+        console.log("Waiting for user interaction to play music.");
+    });
+
+    document.addEventListener("click", () => {
+        if (music.paused) {
+            music.play().catch(() => {});
+        }
+    }, { once: true });
+}
